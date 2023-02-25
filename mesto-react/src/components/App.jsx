@@ -10,6 +10,8 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+  const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
+  const [selectedCard, setSelectedCard] = React.useState();
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
@@ -24,12 +26,17 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
+    setIsImagePopupOpen(false);
+  }
+  function handleCardClick(card) {
+    setIsImagePopupOpen(true);
+    setSelectedCard(card);
   }
 
   return (
     <>
       <Header />
-      <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} />
+      <Main onCardClick={handleCardClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} />
       <Footer />
 
       <PopupWithForm name="edit-profile" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}>
@@ -52,7 +59,7 @@ function App() {
       </PopupWithForm>
 
       <PopupWithForm name="delete-card" title="Вы уверены?" onClose={closeAllPopups} />
-      <ImagePopup />
+      <ImagePopup isOpen={isImagePopupOpen} onClose={closeAllPopups} card={selectedCard} />
       <template id="gallery-item" />
     </>
   );

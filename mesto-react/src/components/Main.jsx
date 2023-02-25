@@ -36,7 +36,7 @@ function Main(props) {
       <section className="gallery">
         <ul className="gallery__list list">
           {cards.map((card) => (
-            <Card key={card._id} card={card} />
+            <Card key={card._id} card={card} onClick={props.onCardClick} />
           ))}
         </ul>
       </section>
