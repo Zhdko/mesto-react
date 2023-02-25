@@ -27,6 +27,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsImagePopupOpen(false);
+    setSelectedCard("");
   }
   function handleCardClick(card) {
     setIsImagePopupOpen(true);
