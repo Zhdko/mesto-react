@@ -9,7 +9,12 @@ function PopupWithForm(props) {
             Сохранить
           </button>
         </form>
-        <button type="button" className="button-icon button-icon_action_close" aria-label="Закрыть" onClick={props.onClose} />
+        <button
+          type="button"
+          className="button-icon button-icon_action_close"
+          aria-label="Закрыть"
+          onClick={props.onClose}
+        />
       </div>
     </div>
   );
