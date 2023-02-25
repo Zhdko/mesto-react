@@ -22,6 +22,7 @@ function App() {
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
   }
+
   function closeAllPopups() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
@@ -29,6 +30,13 @@ function App() {
     setIsImagePopupOpen(false);
     setSelectedCard("");
   }
+
+  document.addEventListener("keydown", function (evt) {
+    if (evt.key === "Escape") {
+      closeAllPopups();
+    }
+  });
+
   function handleCardClick(card) {
     setIsImagePopupOpen(true);
     setSelectedCard(card);
