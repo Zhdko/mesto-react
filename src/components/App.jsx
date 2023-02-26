@@ -32,19 +32,21 @@ function App() {
     console.log("ok");
   }
 
-  function handleEscClose(evt) {
-    if (evt.key === "Escape") {
-      closeAllPopups();
-    }
-  }
-
   useEffect(() => {
-    document.addEventListener("keydown", handleEscClose);
+    function handleEscClose(evt) {
+      if (evt.key === "Escape") {
+        closeAllPopups();
+      }
+    }
 
-    return () => {
-      document.removeEventListener("keydown", handleEscClose);
-    };
-  });
+    if (isEditProfilePopupOpen || isEditAvatarPopupOpen || isAddPlacePopupOpen || isImagePopupOpen) {
+      document.addEventListener("keydown", handleEscClose);
+
+      return () => {
+        document.removeEventListener("keydown", handleEscClose);
+      };
+    }
+  }, [isEditProfilePopupOpen, isEditAvatarPopupOpen, isAddPlacePopupOpen, isImagePopupOpen]);
 
   function handleCardClick(card) {
     setIsImagePopupOpen(true);

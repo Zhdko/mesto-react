@@ -3,18 +3,20 @@ import api from "../utils/Api";
 import Card from "./Card";
 
 function Main(props) {
-  const [userName, setUserName] = useState();
-  const [userDescription, setUserDescription] = useState();
-  const [userAvatar, setUserAvatar] = useState();
+  const [userName, setUserName] = useState("");
+  const [userDescription, setUserDescription] = useState("");
+  const [userAvatar, setUserAvatar] = useState("");
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
-    Promise.all([api.getUserData(), api.getInitialCards()]).then((res) => {
-      setUserName(res[0].name);
-      setUserDescription(res[0].about);
-      setUserAvatar(res[0].avatar);
-      setCards(res[1]);
-    });
+    Promise.all([api.getUserData(), api.getInitialCards()])
+      .then((res) => {
+        setUserName(res[0].name);
+        setUserDescription(res[0].about);
+        setUserAvatar(res[0].avatar);
+        setCards(res[1]);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   return (
