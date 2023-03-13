@@ -1,23 +1,13 @@
-import { useState } from "react";
 import PopupWithForm from "./PopupWithForm";
+import useValidation from "../utils/useValidation";
 
 function AddPlacePopup(props) {
-  const [title, setTitle] = useState();
-  const [link, setLink] = useState();
-
-  function handleTitleChange(e) {
-    setTitle(e.target.value);
-  }
-
-  function handleLinkChange(e) {
-    setLink(e.target.value);
-  }
+  const { values, errors, handleChange, defaultValues } = useValidation();
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.onAddPlace({ name: title, link });
-    setLink("");
-    setTitle("");
+    props.onAddPlace(values);
+    defaultValues({ name: "", link: "" });
   }
 
   return (
@@ -38,10 +28,10 @@ function AddPlacePopup(props) {
         required=""
         minLength={2}
         maxLength={30}
-        value={title}
-        onChange={handleTitleChange}
+        value={values.name || ""}
+        onChange={handleChange}
       />
-      <span className="name-error error" />
+      <span className="name-error error">{errors.name || ""}</span>
       <input
         id="card-link"
         type="url"
@@ -49,10 +39,10 @@ function AddPlacePopup(props) {
         className="popup__text"
         placeholder="Ссылка на картинку"
         required=""
-        value={link}
-        onChange={handleLinkChange}
+        value={values.link || ""}
+        onChange={handleChange}
       />
-      <span className="link-error error" />
+      <span className="link-error error">{errors.link || ""}</span>
     </PopupWithForm>
   );
 }

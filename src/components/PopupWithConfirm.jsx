@@ -14,6 +14,7 @@ function PopupWithConfirm(props) {
       onClose={props.onClose}
       onSubmit={handleSubmit}
       textBtn={props.textBtn}
+      isFormValid={true}
     />
   );
 }

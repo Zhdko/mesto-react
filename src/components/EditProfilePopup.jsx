@@ -1,28 +1,19 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
+import useValidation from "../utils/useValidation";
 import CurrentUserContext from "./contexts/CurrentUserContext";
 import PopupWithForm from "./PopupWithForm";
 
 function EditProfilePopup(props) {
   const currentUser = useContext(CurrentUserContext);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const { values, errors, handleChange, defaultValues } = useValidation();
 
   useEffect(() => {
-    setName(currentUser.name);
-    setDescription(currentUser.about);
+    defaultValues({ name: currentUser.name, about: currentUser.about });
   }, [currentUser]);
-
-  function handleNameChange(e) {
-    setName(e.target.value);
-  }
-
-  function handleDescriptionChange(e) {
-    setDescription(e.target.value);
-  }
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.onUpdateUser({ name, about: description });
+    props.onUpdateUser(values);
   }
 
   return (
@@ -37,16 +28,16 @@ function EditProfilePopup(props) {
       <input
         id="username"
         type="text"
-        name="username"
+        name="name"
         className="popup__text username"
         placeholder="Имя"
         required=""
         minLength={2}
         maxLength={40}
-        value={name}
-        onChange={handleNameChange}
+        value={values.name || ""}
+        onChange={handleChange}
       />
-      <span className="username-error error" />
+      <span className="username-error error">{errors.name || ""}</span>
       <input
         id="job"
         type="text"
@@ -56,10 +47,10 @@ function EditProfilePopup(props) {
         required=""
         minLength={2}
         maxLength={200}
-        value={description}
-        onChange={handleDescriptionChange}
+        value={values.about || ""}
+        onChange={handleChange}
       />
-      <span className="about-error error" />
+      <span className="about-error error">{errors.about || ""}</span>
     </PopupWithForm>
   );
 }
