@@ -1,12 +1,13 @@
 import { useRef } from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function EditAvatarPropfile(props) {
+function EditAvatarPopup(props) {
   const avatarInput = useRef(null);
 
   function handleSubmit(e) {
     e.preventDefault();
     props.onUpdateAvatar(avatarInput.current.value);
+    avatarInput.current.value = "";
   }
 
   return (
@@ -16,6 +17,7 @@ function EditAvatarPropfile(props) {
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSubmit={handleSubmit}
+      textBtn={props.textBtn}
     >
       <input
         id="avatar-link"
@@ -31,4 +33,4 @@ function EditAvatarPropfile(props) {
   );
 }
 
-export default EditAvatarPropfile;
+export default EditAvatarPopup;

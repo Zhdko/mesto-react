@@ -27,6 +27,7 @@ function AddPlacePopup(props) {
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSubmit={handleSubmit}
+      textBtn={props.textBtn}
     >
       <input
         id="card-title"
