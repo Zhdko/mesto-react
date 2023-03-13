@@ -3,7 +3,6 @@ import { useState } from "react";
 function useValidation() {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
-  const [isFormValid, setIsFormValid] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;

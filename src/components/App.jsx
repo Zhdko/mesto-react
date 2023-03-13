@@ -10,6 +10,7 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import PopupWithConfirm from "./PopupWithConfirm";
+import PopupWithError from "./PopupWithError";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -17,18 +18,23 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState([]);
+  const [isErrorPopupOpen, setIsErrorPopupOpen] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedCard, setSelectedCard] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentUser, setCurentUser] = useState({});
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
     Promise.all([api.getUserData(), api.getInitialCards()])
-      .then((res) => {
-        setCurentUser(res[0]);
-        setCards(res[1]);
+      .then(([userData, cardsData]) => {
+        setCurentUser(userData);
+        setCards(cardsData);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setIsErrorPopupOpen(true);
+        setError({ title: err, text: "Ошибка получения данных с сервера" });
+      });
   }, []);
 
   useEffect(() => {
@@ -73,7 +79,8 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsImagePopupOpen(false);
     setIsDeleteCardPopupOpen(false);
-    setSelectedCard("");
+    setIsErrorPopupOpen(false);
+    setTimeout(() => setSelectedCard(null), 300);
   }
 
   function handleUpdateUser(userInfo) {
@@ -81,7 +88,10 @@ function App() {
     api
       .setUserInfo(userInfo)
       .then((res) => setCurentUser(res))
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        setIsErrorPopupOpen(true);
+        setError({ title: err, text: "Увы, что-то пошло не по плану" });
+      })
       .finally(() => {
         setIsLoading(false);
         closeAllPopups();
@@ -93,7 +103,10 @@ function App() {
     api
       .editAvatar(avatar)
       .then((res) => setCurentUser(res))
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        setIsErrorPopupOpen(true);
+        setError({ title: err, text: "Увы, что-то пошло не по плану" });
+      })
       .finally(() => {
         setIsLoading(false);
         closeAllPopups();
@@ -107,7 +120,10 @@ function App() {
       .then((newCard) => {
         setCards([newCard, ...cards]);
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        setIsErrorPopupOpen(true);
+        setError({ title: err, text: "Не смогли добавить новую карточку :(" });
+      })
       .finally(() => {
         setIsLoading(false);
         closeAllPopups();
@@ -117,9 +133,15 @@ function App() {
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
-    api.toggleLike(card._id, isLiked).then((newCard) => {
-      setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
-    });
+    api
+      .toggleLike(card._id, isLiked)
+      .then((newCard) => {
+        setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
+      })
+      .catch((err) => {
+        setIsErrorPopupOpen(true);
+        setError({ title: err, text: "Вы старались" });
+      });
   }
 
   function handleCardDelete(card) {
@@ -129,6 +151,10 @@ function App() {
       .then(() => {
         const newCards = cards.filter((item) => item._id !== card._id);
         setCards(newCards);
+      })
+      .catch((err) => {
+        setIsErrorPopupOpen(true);
+        setError({ title: err, text: "Может оно и к лучшему?" });
       })
       .finally(() => {
         setIsLoading(false);
@@ -182,6 +208,7 @@ function App() {
           textBtn={isLoading ? "Удаление..." : "Да"}
         />
         <ImagePopup isOpen={isImagePopupOpen} onClose={closeAllPopups} card={selectedCard} />
+        <PopupWithError isOpen={isErrorPopupOpen} onClose={closeAllPopups} error={error} />
       </CurrentUserContext.Provider>
     </>
   );

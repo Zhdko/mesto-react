@@ -1,5 +1,6 @@
 import PopupWithForm from "./PopupWithForm";
-import useValidation from "../utils/useValidation";
+import useValidation from "../hooks/useValidation";
+import { useEffect } from "react";
 
 function AddPlacePopup(props) {
   const { values, errors, handleChange, defaultValues } = useValidation();
@@ -7,8 +8,9 @@ function AddPlacePopup(props) {
   function handleSubmit(e) {
     e.preventDefault();
     props.onAddPlace(values);
-    defaultValues({ name: "", link: "" });
   }
+
+  useEffect(() => defaultValues({ name: "", link: "" }), [props.isOpen]);
 
   return (
     <PopupWithForm

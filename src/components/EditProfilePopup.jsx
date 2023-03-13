@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import useValidation from "../utils/useValidation";
+import useValidation from "../hooks/useValidation";
 import CurrentUserContext from "./contexts/CurrentUserContext";
 import PopupWithForm from "./PopupWithForm";
 
@@ -9,7 +9,7 @@ function EditProfilePopup(props) {
 
   useEffect(() => {
     defaultValues({ name: currentUser.name, about: currentUser.about });
-  }, [currentUser]);
+  }, [currentUser, props.isOpen]);
 
   function handleSubmit(e) {
     e.preventDefault();
