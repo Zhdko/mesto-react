@@ -1,23 +1,10 @@
-import React, { useState, useEffect } from "react";
-import api from "../utils/Api";
+import React, { useContext } from "react";
 import Card from "./Card";
+import CurrentUserContext from "./contexts/CurrentUserContext";
 
 function Main(props) {
-  const [userName, setUserName] = useState("");
-  const [userDescription, setUserDescription] = useState("");
-  const [userAvatar, setUserAvatar] = useState("");
-  const [cards, setCards] = useState([]);
-
-  useEffect(() => {
-    Promise.all([api.getUserData(), api.getInitialCards()])
-      .then((res) => {
-        setUserName(res[0].name);
-        setUserDescription(res[0].about);
-        setUserAvatar(res[0].avatar);
-        setCards(res[1]);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  const currentUser = useContext(CurrentUserContext);
+  const cards = props.cards;
 
   return (
     <main className="content page__content">
@@ -29,18 +16,18 @@ function Main(props) {
             className="profile__edit-avatar"
             onClick={props.onEditAvatar}
           />
-          <img alt="Фото профиля." className="profile__img" src={userAvatar} />
+          <img alt="Фото профиля." className="profile__img" src={currentUser.avatar} />
         </div>
         <div className="profile__container">
           <div className="profile__info">
-            <h1 className="profile__username">{userName}</h1>
+            <h1 className="profile__username">{currentUser.name}</h1>
             <button
               type="button"
               className="button-icon button-icon_action_edit"
               aria-label="Редактировать профиль"
               onClick={props.onEditProfile}
             />
-            <p className="profile__userjob">{userDescription}</p>
+            <p className="profile__userjob">{currentUser.about}</p>
           </div>
           <button
             type="button"
@@ -53,7 +40,13 @@ function Main(props) {
       <section className="gallery">
         <ul className="gallery__list list">
           {cards.map((card) => (
-            <Card key={card._id} card={card} onClick={props.onCardClick} />
+            <Card
+              key={card._id}
+              card={card}
+              onClick={props.onCardClick}
+              onCardLike={props.onCardLike}
+              onCardDelete={props.onCardDelete}
+            />
           ))}
         </ul>
       </section>

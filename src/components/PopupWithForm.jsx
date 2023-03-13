@@ -3,7 +3,12 @@ function PopupWithForm(props) {
     <div className={`popup popup_action_${props.name} ${props.isOpen ? "popup_opened" : ""}`}>
       <div className="popup__container">
         <h2 className="popup__title">{props.title}</h2>
-        <form name={props.name} className={`form ${props.name} popup__input-container`} noValidate="">
+        <form
+          name={props.name}
+          className={`form ${props.name} popup__input-container`}
+          noValidate=""
+          onSubmit={props.onSubmit}
+        >
           {props.children}
           <button className="popup__submit-btn" type="submit" aria-label="Сохранить">
             Сохранить
