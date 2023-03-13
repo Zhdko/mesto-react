@@ -40,7 +40,7 @@ export class Api {
     }).then((res) => this._checkResponce(res));
   }
   addNewCard(data) {
-    return fetch(`${this._basUrl}/cards`, {
+    return fetch(`${this._baseUrl}/cards`, {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({
